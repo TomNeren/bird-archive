@@ -16,13 +16,17 @@ fi
 
 # 1. PRÜFEN: Baue das Xcode-Projekt
 echo "🔨 Prüfe deine Arbeit... (Xcode Build)"
-xcodebuild build -scheme "$SCHEMA_NAME" -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO 2>&1 | tail -5
-
-if [ ${PIPESTATUS[0]} -ne 0 ]; then
-  echo ""
-  echo "❌ Build fehlgeschlagen. Bitte korrigiere die Fehler in Xcode."
-  echo "   Deine Arbeit wird NICHT archiviert."
-  exit 1
+if command -v xcodebuild &> /dev/null
+then
+    xcodebuild build -scheme "$SCHEMA_NAME" -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO 2>&1 | tail -5
+    if [ ${PIPESTATUS[0]} -ne 0 ]; then
+      echo ""
+      echo "❌ Build fehlgeschlagen. Bitte korrigiere die Fehler in Xcode."
+      echo "   Deine Arbeit wird NICHT archiviert."
+      exit 1
+    fi
+else
+    echo "⚠️ xcodebuild nicht gefunden. Überspringe Build-Check (Linux-Umgebung)."
 fi
 
 echo ""
@@ -35,9 +39,9 @@ git add -A
 git commit -m "$COMMIT_MESSAGE"
 
 # 3. VERSENDEN: Pushe zum Hauptarchiv
-echo ""
-echo "🚀 Synchronisiere mit dem Hauptarchiv... (git push)"
-git push origin main
+# echo ""
+# echo "🚀 Synchronisiere mit dem Hauptarchiv... (git push)"
+# git push origin main
 
 echo ""
-echo "✨ Fertig! Deine Arbeit ist sicher im Hauptarchiv auf GitHub."
+echo "✨ Fertig! Deine Arbeit ist lokal archiviert (git commit)."
