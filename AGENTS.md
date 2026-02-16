@@ -11,9 +11,33 @@ Eine native iOS/macOS-App (Universal) als **Vogelstimmen-Quiz** mit Sammelkarten
 Spieler hören Vogelgesänge und identifizieren die richtige Art. Über die Zeit füllt sich ein
 persönliches **Archiv** — ein digitales Bestimmungsbuch.
 
-**Metapher:** Du bist ein Archivar, der eine Natursammlung kuratiert. Jede korrekt erkannte Art
-wird als Karte ins Archiv aufgenommen. Die Karten haben rotierende Fakten — man lernt den
-Vogel über mehrere Begegnungen kennen.
+---
+
+## 🏛️ Die Philosophie: Bau eines digitalen Vogel-Archivs
+
+Stell dir vor, du baust nicht nur ein Spiel. Du baust ein **digitales Archiv für Vögel**.
+Das Spiel ist nur die erste, unterhaltsame Art, dieses Archiv zu nutzen.
+Diese Denkweise hilft uns, die App sauber und professionell zu strukturieren.
+
+Unser Archiv hat vier zentrale Komponenten:
+
+1. **Die Archivkarte (`Model`):** Die einzige Quelle der Wahrheit für einen Vogel.
+   Jede Karte ist ein komplettes Set: ID, Name, Bild und Ton.
+   **Eine unvollständige Karte ist unmöglich** — das erzwingen wir durch Typisierung.
+
+2. **Der Archivschrank (`Persistence / SwiftData`):** Hier werden alle Archivkarten
+   sicher und dauerhaft aufbewahrt. Er speichert den Spielstand, erkannte Arten
+   und welche Fakten bereits entdeckt wurden.
+
+3. **Der Archivar (`ViewModel`):** Das Gehirn der App. Er ist der Einzige, der direkt
+   mit dem Archivschrank arbeitet. Er kennt die Spielregeln, bereitet Quiz-Runden
+   vor und wertet Antworten aus.
+
+4. **Die Ausstellungshalle (`View / SwiftUI`):** Die Benutzeroberfläche. Schön und
+   interaktiv, aber "dumm". Sie fragt den Archivar, was sie anzeigen soll, und
+   meldet ihm die Aktionen des Nutzers.
+
+Diese Trennung ist das Geheimnis professioneller Apps.
 
 ---
 
@@ -324,16 +348,37 @@ Am Ende jeder Session: `git push origin main` als letzte Aktion.
 - Sicherstellen dass alle Tests grün sind
 - `git add -A && git commit -m "Step 7: Tests" && git push origin main`
 
+### Alternative: Der "Feierabend-Knopf" (submit.sh)
+
+Statt manuell git-Befehle einzugeben, kannst du auch das `submit.sh`-Script nutzen:
+```bash
+chmod +x submit.sh  # Einmalig
+./submit.sh "Step 4: Quiz views and game logic"
+```
+Es baut das Projekt, committed und pusht automatisch. Schlägt der Build fehl,
+wird NICHT gepusht — so bleibt das Repo immer funktionsfähig.
+
 ### Phase 2: Assets (separat, nicht von Jules)
-- Echte Vogelbilder (via Gemini oder Creative Commons)
-- Echte Audio-Aufnahmen (Xeno-Canto, lizenzfrei)
-- Werden manuell ins Repo committed
+
+**Bilder:** Werden extern generiert mit konsistentem Prompt:
+```
+Generate a photorealistic, high-resolution image of a [Vogelart].
+Style: Digital painting, detailed feathers, scientifically accurate proportions.
+Pose: The bird is perched on a [branch/fence/etc.], viewed from the side to show its full profile.
+Background: Plain white, studio quality.
+Lighting: Bright, natural light, emphasizing the bird's colors.
+Format: Square aspect ratio, 1024x1024, suitable for an app card.
+```
+
+**Audio:** Xeno-Canto (Creative Commons), 10-30 Sek. Gesangsaufnahme pro Art.
 
 ### Phase 3: 3D & KI (Zukunft)
-- RealityKit + USDZ-Vogelmodelle
-- Apple Foundation Models für dynamische Fakten
-- Saisonaler Modus, Standort-Feature
-- Duell-Modus
+- **RealityKit** + USDZ-Vogelmodelle (animiert)
+- **Apple Foundation Models** für dynamische Fakten (on-device, offline)
+- Saisonaler Modus (Frühling: Balzgesänge, Winter: Kontaktrufe)
+- Standort-Feature (CoreLocation + Zugvogel-Datenbank)
+- Duell-Modus (2 Spieler, wer erkennt schneller?)
+- Sound-Spektrogramm-Visualisierung
 
 ---
 
